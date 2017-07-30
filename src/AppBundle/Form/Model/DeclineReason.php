@@ -9,21 +9,21 @@ class DeclineReason
 {
 
     /**
-     * @var  int
+     * @var  int|null
      * @Assert\NotBlank()
      */
     private $reason;
 
     /**
      * @var  string
-     * @Assert\NotBlank(group="other")
+     * @Assert\NotBlank(groups={"other"})
      */
-    private $other;
+    private $other = '';
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getReason(): int
+    public function getReason()
     {
         return $this->reason;
     }
@@ -31,7 +31,7 @@ class DeclineReason
     /**
      * @param int $reason
      */
-    public function setReason(int $reason)
+    public function setReason(int $reason = null)
     {
         $this->reason = $reason;
     }
@@ -39,7 +39,7 @@ class DeclineReason
     /**
      * @return string
      */
-    public function getOther(): string
+    public function getOther()
     {
         return $this->other;
     }
@@ -47,7 +47,7 @@ class DeclineReason
     /**
      * @param string $other
      */
-    public function setOther(string $other)
+    public function setOther(string $other = null)
     {
         $this->other = $other;
     }

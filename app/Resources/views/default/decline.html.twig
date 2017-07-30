@@ -1,5 +1,55 @@
 {% extends 'base.html.twig' %}
 
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
 {% block body %}
-    {{ form(form, {'attr': {'novalidate': 'novalidate'}}) }}
+    <div id="wrapper">
+        <div id="container">
+            <div id="welcome">
+                <h1>Reason for declining</h1>
+            </div>
+            {{ form(form, {'attr': {'novalidate': 'novalidate'}}) }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $('.reason-hide').closest('.form-group').hide();
+
+        var $reason = $('#decline_reason_reason');
+        $reason.change(function () {
+            var reason = $reason.find(':checked').val();
+            console.log(reason);
+            if (reason == 3) {
+                $('.reason-hide').closest('.form-group').show();
+            } else {
+                $('.reason-hide').closest('.form-group').hide();
+            }
+        });
+
+        $form = $('#decline_reason').closest('form');
+        console.log($form);
+        $form.submit(function (e) {
+            var url = "{{ path('agent_decline_reason', { 'id': 123 }) }}";
+            console.log(url);
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: $form.serialize(),
+                success: function (data) {
+                    if(data.status != 'ok') {
+
+                        $('#decline_reason').append('<span class="help-block">    <ul class="list-unstyled"><li><span class="glyphicon glyphicon-exclamation-sign"></span> This value should not be blank.</li></ul></span>')
+                    } else {
+                        $form.append('ok');
+                    }
+                }
+            });
+
+            e.preventDefault();
+        })
+
+    </script>
 {% endblock %}

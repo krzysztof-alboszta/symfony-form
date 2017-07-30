@@ -4,10 +4,11 @@ namespace AppBundle\Form;
 
 use AppBundle\Enum\DeclineType;
 use AppBundle\Form\Model\DeclineReason;
-use Doctrine\DBAL\Types\TextType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\RadioType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -20,8 +21,16 @@ class DeclineReasonType extends AbstractType
     {
         $builder->add('reason', ChoiceType::class, [
             'choices' => DeclineType::getAsOptions(),
+            'multiple' => false,
+            'expanded' => true,
         ])
-            ->add('other', TextType::class, ['placeholder' => 'Enter other reason'])
+            ->add('other', TextareaType::class, [
+                'attr' => [
+                    'placeholder' => 'Enter other reason',
+                    'class' => 'reason-hide',
+                ],
+                'required' => true,
+            ])
             ->add('save', SubmitType::class, ['label' => 'Submit']);
 
         $builder->addEventListener(
@@ -31,8 +40,8 @@ class DeclineReasonType extends AbstractType
 
                 /** @var DeclineReason $reason */
                 $reason = $event->getData();
-                if ($reason->isOtherReason()){
-                    $form->add('other', TextType::class, array(
+                if ($reason->isOtherReason()) {
+                    $form->add('other', TextareaType::class, array(
                         'class' => 'AppBundle:Position',
                         'placeholder' => 'Enter other reason',
                         'required' => true,
